@@ -12,30 +12,32 @@
     <!--bootstrap 5.2.3-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
+    <!-- Jquery 3.7-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js" integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>Randevu</title>
 </head>
 <body>
 <div class="container">
 
     <div class="row pt-4 pb-4" id="sessions">
-        <h4>Kontenjan Durumu</h4>
+        <h4>Randevu Durumu</h4>
         <div id="sessionContainer">
             <!-- Sessions will be dynamically added here -->
         </div>
         <div class="mb-4 col-12 d-flex gap-4">
             <div class="btn-group">
                 <button id="addSessionBtn" class="btn w-auto"
-                        style="padding: 8px 15px !important; font-size: 16px; background: linear-gradient(to right,#1e7a23,rgba(73,180,79,0.98)); color: #FFFFFF;">Kontenjan Ekle
+                        style="padding: 8px 15px !important; font-size: 16px; background: linear-gradient(to right,#1e7a23,rgba(73,180,79,0.98)); color: #FFFFFF;">Randevu Ekle
                 </button>
             </div>
 
             <div class="btn-group">
                 <button id="removeSessionBtn" onclick="removeLastSession();" class="btn w-auto"
-                        style="padding: 8px 15px !important; font-size: 16px;background:linear-gradient(to right, #B71C1C,#f55555); color: #FFFFFF;">Kontenjan Kaldır
+                        style="padding: 8px 15px !important; font-size: 16px;background:linear-gradient(to right, #B71C1C,#f55555); color: #FFFFFF;">Randevu Kaldır
                 </button>
             </div>
             <div class="btn-group">
-                <button id="saveSessionBtn" onclick="postAcademician(sessionIndex);" class="btn w-auto"
+                <button id="saveSessionBtn" onclick="postAppointment(sessionIndex);" class="btn w-auto"
                         style="padding: 8px 15px !important; font-size: 16px;background:linear-gradient(to right, #01579B,#1986dc); color: #FFFFFF;">Kaydet
                 </button>
             </div>
@@ -63,9 +65,8 @@
                 var newSession = createSession(sessionIndex);
                 sessionContainer.appendChild(newSession);
                 sessions.push({
-                    department_id: "",
-                    kontenjan: "",
-                    idHidden: ""
+                    title: "",
+                    content: "",
                 });
 
                 sessionIndex++;
@@ -91,27 +92,12 @@
     <div class="row mt-3 mb-4">
         <div id="namestage" class="form-group mb-4 col-12 d-flex" style="gap:3rem;">
             <div class="inp-group">
-                <label>Enstitü</label>
-                <select class="form-select" id="institute${index}" style="">
-                    <option selected disabled>Lütfen Seçiniz</option>
-
-                    <option value="91">FEN BİLİMLERİ</option>
-                    <option value="92">SOSYAL BİLİMLER</option>
-                    <option value="93">SAĞLIK BİLİMLERİ</option>
-                    <option value="94">EĞİTİM BİLİMLERİ</option>
-                </select>
+                <label>Title</label>
+                <input class="form-control" type="text" name="title" id="title${index}">
             </div>
                 <div class="inp-group">
-                    <label>Bilim Dalı</label>
-                    <select class="form-select" name="department_id" id="department_id${index}" style="width:475px;">
-
-                        <option selected>Lütfen önce enstitü seçiniz.</option>
-                        <option value=""></option>
-                    </select>
-                </div>
-                <div class="inp-group">
-                    <label>Kontenjan</label>
-                    <input class="form-control" type="number" name="kontenjan" id="kontenjan${index}">
+                    <label>Content</label>
+                    <input class="form-control" type="text" name="content" id="content${index}">
                 </div>
 
                 <input type="hidden" id="idHidden${index}">
@@ -119,23 +105,6 @@
         </div>`;
 
                 session.appendChild(sessionForm);
-
-                var instituteSelect = sessionForm.querySelector(`#institute${index}`);
-                instituteSelect.addEventListener("change", function () {
-                    var institute = this.value;
-                    var departmentSelect = sessionForm.querySelector(`#department_id${index}`);
-
-                    //var departments = ;
-                    var selectedInstituteDepartments = departments[institute];
-                    departmentSelect.innerHTML = "";
-
-                    selectedInstituteDepartments.forEach(department => {
-                        var option = document.createElement("option");
-                        option.value = department.id;
-                        option.textContent = department.name;
-                        departmentSelect.appendChild(option);
-                    });
-                });
 
                 return session;
             }
@@ -157,7 +126,8 @@
             }
 
 
-            function postAcademician(count) {
+            function postAppointment(count) {
+                alert(count);
 
                 var sessionCount = count - 1;
                 var sessionData = [];
@@ -165,20 +135,19 @@
                 for (var sessionIndex = 0; sessionIndex <= sessionCount; sessionIndex++) {
                     console.log("index=" + sessionIndex)
                     //var danismanId = ;
-                    var kontenjan = document.getElementById('kontenjan' + sessionIndex).value;
-                    var department_id = document.getElementById('department_id' + sessionIndex).value;
+                    var title = document.getElementById('title' + sessionIndex).value;
+                    var content = document.getElementById('content' + sessionIndex).value;
 
                     sessionData.push({
-                        danismanId: 1,
-                        kontenjan: kontenjan,
-                        department_id: department_id,
+                        title: title,
+                        content: content,
                     });
                 }
                 console.log(sessionData);
 
                 $.ajax({
                     type: 'GET',
-                    url: ``,
+                    url: `{{route('create-appointment')}}`,
                     data: {
                         sessions: sessionData,
                     },

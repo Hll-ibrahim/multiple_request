@@ -15,3 +15,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [AppointmentController::class, 'index'])->name('index');
+Route::get('/appointment/create', [AppointmentController::class, 'create'])->name('create-appointment');
