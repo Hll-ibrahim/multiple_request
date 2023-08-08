@@ -21,7 +21,31 @@ class AppointmentController extends Controller
      */
     public function create(Request $request)
     {
-        dd($request->all());
+
+        $request->validate([
+            'sessions.*.title' => 'required',
+            'sessions.*.content' => 'required',
+        ],
+            [
+                'sessions.*.title.required' => 'Başlık alanı gereklidir!',
+                'sessions.*.content.required' => 'İçerik alanı gereklidir!',
+
+            ]
+        );
+
+
+        $sessions = $request->sessions;
+
+
+        // Her bir session için bir kayıt oluşturuyoruz.
+        foreach ($sessions as $session) {
+            Appointment::create([
+                'title' => $session['title'],
+                'content' => $session['content'],
+            ]);
+        }
+
+        return response()->json(['success' => 'success']);
     }
 
     /**
