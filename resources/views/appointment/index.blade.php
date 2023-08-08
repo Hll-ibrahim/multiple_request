@@ -90,7 +90,7 @@
                 var session = document.createElement("div");
                 session.id = "session" + index;
                 var sessionForm = document.createElement("form");
-                sessionForm.id = "details_academician_modal" + index;
+                sessionForm.id = "create_appointment_modal" + index;
                 sessionForm.innerHTML = `
     <div class="row mt-3 mb-4">
         <div id="namestage" class="form-group mb-4 col-12 d-flex" style="gap:3rem;">
@@ -130,7 +130,6 @@
 
 
             function postAppointment(count) {
-                alert(count);
 
                 var sessionCount = count - 1;
                 var sessionData = [];
